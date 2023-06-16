@@ -28,23 +28,27 @@ void AFPSAIGuard::BeginPlay()
 	
 	OriginalRotation = GetActorRotation();
 
+	// 정찰이 켜져있을 경우 다음 정찰 포인트로 이동.
 	if (bPatrol)
 	{
 		MoveToNextPatrolPoint();
 	}
 }
 
+// 가드가 플레이어를 본 경우.
 void AFPSAIGuard::OnPawnSeen(APawn * SeenPawn)
 {
 	if (SeenPawn == nullptr)
 	{
 		return;
 	}
+	// 플레이어 위치에 빨간 구체를 그린다.
 	DrawDebugSphere(GetWorld(), SeenPawn->GetActorLocation(), 32.0f, 12, FColor::Red, false, 10.0f);
 
 	AFPSGameMode* GM = Cast<AFPSGameMode>(GetWorld()->GetAuthGameMode());
 	if (GM)
-	{
+	{	
+		// 미션 실패.
 		GM->CompleteMission(SeenPawn, false);
 	}
 
@@ -53,16 +57,20 @@ void AFPSAIGuard::OnPawnSeen(APawn * SeenPawn)
 	AController* Controller = GetController();
 	if (Controller)
 	{
+		// 움직임 정지.
 		Controller->StopMovement();
 	}
 }
 
+// 소음을 들은 경우.
 void AFPSAIGuard::OnNoiseHeard(APawn * NoiseInstigator, const FVector & Location, float Volume)
 {
 	if (GuardState == EAIState::Alerted)
 	{
 		return;
 	}
+
+	// 소음 위치에 초록 구체 표시.
 	DrawDebugSphere(GetWorld(), Location, 32.0f, 12, FColor::Green, false, 10.0f);
 
 	FVector Direction = Location - GetActorLocation();
@@ -75,12 +83,14 @@ void AFPSAIGuard::OnNoiseHeard(APawn * NoiseInstigator, const FVector & Location
 	SetActorRotation(NewLookAt);
 	SetGuardState(EAIState::Suspicious);
 
+	// 3초 후 원래 상태로 복귀.
 	GetWorldTimerManager().ClearTimer(TimerHandle_ResetOrientation);
 	GetWorldTimerManager().SetTimer(TimerHandle_ResetOrientation, this, &AFPSAIGuard::ResetOrientation, 3.0f);	
 
 	AController* Controller = GetController();
 	if (Controller)
 	{
+		// 움직임 정지.
 		Controller->StopMovement();
 	}
 }
@@ -127,6 +137,7 @@ void AFPSAIGuard::Tick(float DeltaTime)
 		FVector Delta = GetActorLocation() - CurrentPatrolPoint->GetActorLocation();
 		float DistanceToGoal = Delta.Size();
 
+		// 다음 지점까지의 거리가 50 미만이면 다음 정찰 지점으로 이동.
 		if (DistanceToGoal < 50)
 		{
 			MoveToNextPatrolPoint();

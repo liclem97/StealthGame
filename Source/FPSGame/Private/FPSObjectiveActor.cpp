@@ -38,7 +38,7 @@ void AFPSObjectiveActor::PlayEffects()
 	UGameplayStatics::SpawnEmitterAtLocation(this, PickupFX, GetActorLocation());
 }
 
-//다른 액터가 부딪혔을 때 발동
+// 다른 액터와 오버랩 된 경우.
 void AFPSObjectiveActor::NotifyActorBeginOverlap(AActor * OtherActor)
 {
 	Super::NotifyActorBeginCursorOver();

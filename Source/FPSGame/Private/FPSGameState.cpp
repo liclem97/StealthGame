@@ -5,7 +5,7 @@
 
 void AFPSGameState::MulticastOnMissionComplete_Implementation(APawn* InstigatorPawn, bool bMissionSuccess)
 {
-	//월드에 있는 모든 컨트롤러를 가져옴
+	// 월드에 있는 모든 컨트롤러를 가져옴
 	for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; It++)
 	{
 		AFPSPlayerController* PC = Cast<AFPSPlayerController>(It->Get());

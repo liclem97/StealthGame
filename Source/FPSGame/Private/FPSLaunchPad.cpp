@@ -23,15 +23,18 @@ AFPSLaunchPad::AFPSLaunchPad()
 	LaunchPitchAngle = 35.0f;
 }
 
+// 오버랩 된 액터를 발사.
 void AFPSLaunchPad::OverlapLaunchPad(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
+	// 발사 방향, 각도, 속도 등을 조정.
 	FRotator LaunchDirection = GetActorRotation();
 	LaunchDirection.Pitch += LaunchPitchAngle;
 	FVector LaunchVelocity = LaunchDirection.Vector() * LaunchStrength;
 
 	ACharacter* OtherCharacter = Cast<ACharacter>(OtherActor);
 	if (OtherCharacter)
-	{
+	{	
+		// 오버랩 된 액터를 발사한다.
 		OtherCharacter->LaunchCharacter(LaunchVelocity, true, true);
 
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ActivateLaunchPadEffect, GetActorLocation());

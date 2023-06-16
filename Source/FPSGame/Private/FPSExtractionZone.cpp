@@ -29,8 +29,7 @@ AFPSExtractionZone::AFPSExtractionZone()
 	DecalComp->SetupAttachment(RootComponent);
 }
 
-
-
+// 플레이어가 탈출 지역에 오버랩 된 경우.
 void AFPSExtractionZone::HandleOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor,
 	UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
@@ -39,16 +38,20 @@ void AFPSExtractionZone::HandleOverlap(UPrimitiveComponent * OverlappedComponent
 	{
 		return;
 	}
+
+	// 폰이 목표물을 갖고 있는 경우.
 	if (MyPawn->bIsCarryingObjective)
 	{
 		AFPSGameMode* GM = Cast<AFPSGameMode>(GetWorld()->GetAuthGameMode());
 		if (GM)
 		{
+			// 미션 성공.
 			GM->CompleteMission(MyPawn, true);
 		}
 	}
 	else
 	{
+		// 목표물을 갖고있지 않으면 에러 사운드.
 		UGameplayStatics::PlaySound2D(this, ObjectiveMissingSound);
 	}
 	UE_LOG(LogTemp, Log, TEXT("Overlap with ExtractionZone"));

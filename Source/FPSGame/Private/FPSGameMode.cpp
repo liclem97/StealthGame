@@ -22,25 +22,26 @@ AFPSGameMode::AFPSGameMode()
 	PlayerControllerClass = AFPSPlayerController::StaticClass();
 }
 
-
+// 미션 성공 판별 함수.
 void AFPSGameMode::CompleteMission(APawn* InstigatorPawn, bool bMissionSuccess)
 {
 	if (InstigatorPawn)
 	{
 		if (SpectatingViewpointClass)
 		{
+			// SpectatingViewpointClass를 찾아 ReturnedActors에 저장한다.
 			TArray<AActor*> ReturnedActors;
 			UGameplayStatics::GetAllActorsOfClass(this, SpectatingViewpointClass, ReturnedActors);
-
-			//어떤 유효한 액터를 찾으면 뷰 타겟을 변경한다.
+			
 			if (ReturnedActors.Num() > 0)
 			{
 				AActor* NewViewTarget = ReturnedActors[0];
 
+				// 모든 플레이어의 시점을 SpectatingViewpointClass로 변경한다.
 				for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; It++)
 				{
 					APlayerController* PC = It->Get();
-					if (PC) // 로컬 컨트롤러로 확인하면 하나만 실행하기 때문에 사용하면 안됨.
+					if (PC) 
 					{
 						PC->SetViewTargetWithBlend(NewViewTarget, 0.5f, EViewTargetBlendFunction::VTBlend_Cubic);
 					}

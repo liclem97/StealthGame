@@ -52,7 +52,7 @@ void AFPSCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	//서버에서만 실행
+	// 조종하는 플레이어를 제외하고 실행.
 	if (!IsLocallyControlled())
 	{
 		//다른 클라이언트에서 보는 캐릭터의 pitch를 변경함
